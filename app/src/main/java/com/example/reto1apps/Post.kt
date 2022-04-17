@@ -8,14 +8,14 @@ class Post {
     var description:String
     var autor: String
     var location:String
-    var image:String
+    var image:String?
     var date: String
 
     constructor(
         description: String,
         autor: String,
         city: String,
-        image: String,
+        image: String?,
         date: String
     ) {
         this.id = UUID.randomUUID().toString()

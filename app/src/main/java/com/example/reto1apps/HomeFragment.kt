@@ -49,10 +49,10 @@ class HomeFragment : Fragment(), NewPostFragment.OnNewPostListerner {
         description: String,
         autor: String,
         location: String,
-        date: String,
-        image: String
+        image: String?,
+        date: String
     ) {
-        val newPost =Post(description,autor,location,date,image)
+        val newPost =Post(description,autor,location,image,date)
         adapter.addPost(newPost)
     }
 }
