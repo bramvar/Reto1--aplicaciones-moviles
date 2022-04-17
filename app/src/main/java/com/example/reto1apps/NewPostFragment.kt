@@ -18,6 +18,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import com.example.reto1apps.databinding.FragmentNewPostBinding
+import edu.co.icesi.semana4kotlina.UtilDomi
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,6 +43,7 @@ class NewPostFragment(val currentUser: String?) : Fragment() {
         var view = binding.root
 
         val camLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),::onCameraResult)
+        val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult(),::onGalleryResult)
 
         requestPermissions(arrayOf(
             Manifest.permission.CAMERA,
@@ -55,6 +57,12 @@ class NewPostFragment(val currentUser: String?) : Fragment() {
             i.putExtra(MediaStore.EXTRA_OUTPUT,uri)
             Log.e(">>>",file?.path.toString())
             camLauncher.launch(i)
+        }
+
+        binding.galleryBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*"
+            galleryLauncher.launch(intent)
         }
 
         binding.postBtn.setOnClickListener {
@@ -104,9 +112,17 @@ class NewPostFragment(val currentUser: String?) : Fragment() {
             val thumpnail = Bitmap.createScaledBitmap(bitmap, bitmap.width/4, bitmap.height/4, true)
             binding.selectedImage.setImageBitmap(thumpnail)
 
-        } else if(activityResult.resultCode == RESULT_CANCELED) {
-
         }
+    }
+
+    private fun onGalleryResult(activityResult: ActivityResult){
+        val uri = activityResult.data?.data
+        binding.selectedImage.setImageURI(uri)
+        val path = UtilDomi.getPath(activity!!, uri!!)
+        Log.e(">>>", uri.toString())
+        Log.e(">>>", path!!)
+
+        file = File(path)
     }
 
     interface  OnNewPostListerner{
